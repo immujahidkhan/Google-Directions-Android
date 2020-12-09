@@ -5,7 +5,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -44,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark,R.color.primary,R.color.primary_light,R.color.accent,R.color.primary_dark_material_light};
+    private static final int[] COLORS = new int[]{R.color.primary_dark, R.color.primary, R.color.primary_light, R.color.accent, R.color.primary_dark_material_light};
 
 
-    private static final LatLngBounds BOUNDS_JAMAICA= new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
+    private static final LatLngBounds BOUNDS_JAMAICA = new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
             new LatLng(72.77492067739843, -9.998857788741589));
 
     /**
@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
 
         /*
-        * Updates the bounds being used by the auto complete adapter based on the position of the
-        * map.
-        * */
+         * Updates the bounds being used by the auto complete adapter based on the position of the
+         * map.
+         * */
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition position) {
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                     @Override
                     public void onLocationChanged(Location location) {
 
-                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
 
                         map.moveCamera(center);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                 3000, 0, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
 
                         map.moveCamera(center);
@@ -181,17 +181,17 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
 
         /*
-        * Adds auto complete adapter to both auto complete
-        * text views.
-        * */
+         * Adds auto complete adapter to both auto complete
+         * text views.
+         * */
         starting.setAdapter(mAdapter);
         destination.setAdapter(mAdapter);
 
 
         /*
-        * Sets the start and destination points based on the values selected
-        * from the autocomplete text views.
-        * */
+         * Sets the start and destination points based on the values selected
+         * from the autocomplete text views.
+         * */
 
         starting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                         // Get the Place object from the buffer.
                         final Place place = places.get(0);
 
-                        start=place.getLatLng();
+                        start = place.getLatLng();
                     }
                 });
 
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                         // Get the Place object from the buffer.
                         final Place place = places.get(0);
 
-                        end=place.getLatLng();
+                        end = place.getLatLng();
                     }
                 });
 
@@ -293,9 +293,8 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
-                if(end!=null)
-                {
-                    end=null;
+                if (end != null) {
+                    end = null;
                 }
             }
 
@@ -308,47 +307,31 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @OnClick(R.id.send)
-    public void sendRequest()
-    {
-        if(Util.Operations.isOnline(this))
-        {
+    public void sendRequest() {
+        if (Util.Operations.isOnline(this)) {
             route();
-        }
-        else
-        {
-            Toast.makeText(this,"No internet connectivity",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "No internet connectivity", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void route()
-    {
-        if(start==null || end==null)
-        {
-            if(start==null)
-            {
-                if(starting.getText().length()>0)
-                {
+    public void route() {
+        if (start == null || end == null) {
+            if (start == null) {
+                if (starting.getText().length() > 0) {
                     starting.setError("Choose location from dropdown.");
-                }
-                else
-                {
-                    Toast.makeText(this,"Please choose a starting point.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Please choose a starting point.", Toast.LENGTH_SHORT).show();
                 }
             }
-            if(end==null)
-            {
-                if(destination.getText().length()>0)
-                {
+            if (end == null) {
+                if (destination.getText().length() > 0) {
                     destination.setError("Choose location from dropdown.");
-                }
-                else
-                {
-                    Toast.makeText(this,"Please choose a destination.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Please choose a destination.", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        else
-        {
+        } else {
             progressDialog = ProgressDialog.show(this, "Please wait.",
                     "Fetching route information.", true);
             Routing routing = new Routing.Builder()
@@ -366,9 +349,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     public void onRoutingFailure(RouteException e) {
         // The Routing request failed
         progressDialog.dismiss();
-        if(e != null) {
+        if (e != null) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -379,8 +362,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @Override
-    public void onRoutingSuccess(List<Route> route, int shortestRouteIndex)
-    {
+    public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
@@ -388,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         map.moveCamera(center);
 
 
-        if(polylines.size()>0) {
+        if (polylines.size() > 0) {
             for (Polyline poly : polylines) {
                 poly.remove();
             }
@@ -396,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
         polylines = new ArrayList<>();
         //add route(s) to the map.
-        for (int i = 0; i <route.size(); i++) {
+        for (int i = 0; i < route.size(); i++) {
 
             //In case of more than 5 alternative routes
             int colorIndex = i % COLORS.length;
@@ -408,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
 
         // Start marker
@@ -433,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-        Log.v(LOG_TAG,connectionResult.toString());
+        Log.v(LOG_TAG, connectionResult.toString());
     }
 
     @Override

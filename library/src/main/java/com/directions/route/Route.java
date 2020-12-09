@@ -13,6 +13,7 @@ import java.util.List;
 
 public class Route implements Parcelable {
     private String name;
+    private String overview_polyline_points;
     private final List<LatLng> points;
     private List<Segment> segments;
     private String copyright;
@@ -31,6 +32,14 @@ public class Route implements Parcelable {
     public Route() {
         points = new ArrayList<>();
         segments = new ArrayList<>();
+    }
+
+    public String getOverview_polyline_points() {
+        return overview_polyline_points;
+    }
+
+    public void setOverview_polyline_points(String overview_polyline_points) {
+        this.overview_polyline_points = overview_polyline_points;
     }
 
     private Route(Parcel in) {

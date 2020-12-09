@@ -51,7 +51,7 @@ public class GoogleParser extends XMLParser implements Parser {
             final JSONObject json = new JSONObject(result);
             //Get the route object
 
-            if(!json.getString("status").equals(OK)){
+            if (!json.getString("status").equals(OK)) {
                 throw new RouteException(json);
             }
 
@@ -64,10 +64,12 @@ public class GoogleParser extends XMLParser implements Parser {
 
                 JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
                 //Get the bounds - northeast and southwest
+                final JSONObject overview_polyline = jsonRoute.getJSONObject("overview_polyline");
                 final JSONObject jsonBounds = jsonRoute.getJSONObject("bounds");
                 final JSONObject jsonNortheast = jsonBounds.getJSONObject("northeast");
                 final JSONObject jsonSouthwest = jsonBounds.getJSONObject("southwest");
 
+                route.setOverview_polyline_points(overview_polyline.getString("points"));
                 route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
 
                 //Get the leg, only one leg as we don't support waypoints
@@ -109,13 +111,13 @@ public class GoogleParser extends XMLParser implements Parser {
                     final int length = step.getJSONObject(DISTANCE).getInt(VALUE);
                     distance += length;
                     segment.setLength(length);
-                    segment.setDistance((double)distance / (double)1000);
+                    segment.setDistance((double) distance / (double) 1000);
                     //Strip html from google directions and set as turn instruction
                     segment.setInstruction(step.getString("html_instructions").replaceAll("<(.*?)*>", ""));
-                    
-                    if(step.has("maneuver"))
+
+                    if (step.has("maneuver"))
                         segment.setManeuver(step.getString("maneuver"));
-                    
+
                     //Retrieve & decode this segment's polyline and add it to the route.
                     route.addPoints(decodePolyLine(step.getJSONObject("polyline").getString("points")));
                     //Push a copy of the segment to the route
@@ -126,7 +128,7 @@ public class GoogleParser extends XMLParser implements Parser {
             }
 
         } catch (JSONException e) {
-            throw new RouteException("JSONException. Msg: "+e.getMessage());
+            throw new RouteException("JSONException. Msg: " + e.getMessage());
         }
         return routes;
     }
